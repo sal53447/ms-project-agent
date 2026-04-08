@@ -2,6 +2,7 @@
 import typer
 from rich.console import Console
 
+from ms_planner.cli.groups import groups_app
 from ms_planner.cli.plans import plans_app
 from ms_planner.cli.buckets import buckets_app
 from ms_planner.cli.tasks import tasks_app
@@ -16,6 +17,7 @@ app = typer.Typer(
     name="planner",
     help="Microsoft Planner CLI — manage plans, tasks, and buckets via Graph API",
 )
+app.add_typer(groups_app, name="groups")
 app.add_typer(plans_app, name="plans")
 app.add_typer(buckets_app, name="buckets")
 app.add_typer(tasks_app, name="tasks")
