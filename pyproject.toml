@@ -14,7 +14,7 @@ dependencies = [
 ]
 
 [project.scripts]
-planner = "ms_planner.cli.main:app"
+planner = "ms_planner.cli.main:run"
 
 [build-system]
 requires = ["hatchling"]
