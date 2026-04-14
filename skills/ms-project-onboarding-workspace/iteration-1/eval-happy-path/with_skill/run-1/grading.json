@@ -1,0 +1,31 @@
+{
+  "expectations": [
+    {
+      "text": "A config.yaml was created under projects/website-redesign/ with the correct plan_id and group_id",
+      "passed": true,
+      "evidence": "projects/website-redesign/config.yaml exists with plan_id: plan-abc123, group_id: grp-xyz456"
+    },
+    {
+      "text": "The agent conducted an interview asking about scope, goals, milestones, risks, and stakeholders before writing documents",
+      "passed": true,
+      "evidence": "Transcript confirms all 9 interview areas covered before any files were written"
+    },
+    {
+      "text": "At least 10 of 15 documents were created with real content (not just empty stubs)",
+      "passed": true,
+      "evidence": "12 of 15 docs fully populated; 3 are stubs (change-requests, lessons-learned, meeting-notes) which is correct per the skill"
+    },
+    {
+      "text": "The project was registered in projects/index.yaml",
+      "passed": true,
+      "evidence": "projects/index.yaml contains entry for website-redesign with correct plan_id and group_id"
+    },
+    {
+      "text": "A connection validation step was attempted (tasks list or equivalent)",
+      "passed": true,
+      "evidence": "Agent simulated tasks list call and reported result to user"
+    }
+  ],
+  "summary": { "passed": 5, "failed": 0, "total": 5, "pass_rate": 1.0 },
+  "timing": { "total_duration_seconds": 258.3 }
+}

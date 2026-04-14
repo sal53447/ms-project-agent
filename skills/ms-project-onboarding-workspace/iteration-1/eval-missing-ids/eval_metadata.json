@@ -1,0 +1,27 @@
+{
+  "eval_id": 1,
+  "eval_name": "eval-missing-ids",
+  "prompt": "I need to onboard a project but I don't have the plan_id or group_id yet. The project is called 'Q3 Infrastructure Upgrade'.",
+  "assertions": [
+    {
+      "id": "cli_lookup_run",
+      "text": "The agent ran planner groups list and planner plans list itself to resolve the IDs, rather than asking the user to run them"
+    },
+    {
+      "id": "match_confirmed",
+      "text": "The agent showed the matched group/plan to the user and confirmed before proceeding"
+    },
+    {
+      "id": "config_created",
+      "text": "A config.yaml was created with resolved plan_id and group_id"
+    },
+    {
+      "id": "docs_populated",
+      "text": "At least 10 of 15 documents were created with real content"
+    },
+    {
+      "id": "index_registered",
+      "text": "The project was registered in projects/index.yaml"
+    }
+  ]
+}

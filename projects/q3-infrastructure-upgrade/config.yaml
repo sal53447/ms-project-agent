@@ -1,0 +1,34 @@
+project:
+  name: "Q3 Infrastructure Upgrade"
+  plan_id: "BxK7mNpQ2r_cDf3sT8vZwA"          # required
+  group_id: "a3f92b11-4c7d-4e8a-b2f1-9d8e7c6f5a4b"        # required
+  bucket_ids:
+    Milestones: "BCK_001_milestones"
+    Risks & Issues: "BCK_002_risks"
+    Backlog: "BCK_003_backlog"
+    In Progress: "BCK_004_inprogress"
+    Done: "BCK_005_done"
+
+meta:
+  description: "Modernize on-premises server infrastructure by upgrading 14 end-of-life servers and migrating remaining workloads to Azure, targeting full completion by September 30, 2026."
+  owner: "Sarah Chen (CTO)"
+  start_date: "2026-04-14"
+  end_date: "2026-09-30"
+  status: "active"
+  tags:
+    - infrastructure
+    - azure-migration
+    - q3-2026
+
+agent:
+  summary_schedule: "weekly"
+  milestone_bucket: "BCK_001_milestones"
+  risk_bucket: "BCK_002_risks"
+  priority_labels:
+    - "High"
+    - "Critical"
+
+documents:
+  requirements: "projects/q3-infrastructure-upgrade/docs/requirements.md"
+  decisions_log: "projects/q3-infrastructure-upgrade/docs/decision-log.md"
+  stakeholders: "projects/q3-infrastructure-upgrade/docs/stakeholders.md"

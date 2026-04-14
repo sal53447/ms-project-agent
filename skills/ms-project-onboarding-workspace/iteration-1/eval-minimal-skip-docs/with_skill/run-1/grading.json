@@ -1,0 +1,26 @@
+{
+  "expectations": [
+    {
+      "text": "A config.yaml was created with the correct plan_id and group_id",
+      "passed": true,
+      "evidence": "projects/data-migration/config.yaml created with plan_id: plan-dm99, group_id: grp-infra01"
+    },
+    {
+      "text": "The project was registered in projects/index.yaml",
+      "passed": true,
+      "evidence": "index.yaml contains data-migration entry"
+    },
+    {
+      "text": "The agent respected the user's request to skip document scaffolding",
+      "passed": true,
+      "evidence": "Agent skipped Steps 3 and 4 (interview + docs) based on user intent — though skill has no explicit fast-path"
+    },
+    {
+      "text": "A connection validation step was attempted",
+      "passed": true,
+      "evidence": "Agent attempted tasks list validation (simulated 404, treated as success)"
+    }
+  ],
+  "summary": { "passed": 4, "failed": 0, "total": 4, "pass_rate": 1.0 },
+  "timing": { "total_duration_seconds": 69.2 }
+}

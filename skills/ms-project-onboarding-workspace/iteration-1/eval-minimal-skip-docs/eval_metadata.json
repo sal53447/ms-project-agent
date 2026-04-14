@@ -1,0 +1,23 @@
+{
+  "eval_id": 2,
+  "eval_name": "eval-minimal-skip-docs",
+  "prompt": "Add project: name='Data Migration', plan_id='plan-dm99', group_id='grp-infra01'. Skip the docs for now, just the config and index.",
+  "assertions": [
+    {
+      "id": "config_created",
+      "text": "A config.yaml was created with the correct plan_id and group_id"
+    },
+    {
+      "id": "index_registered",
+      "text": "The project was registered in projects/index.yaml"
+    },
+    {
+      "id": "user_intent_respected",
+      "text": "The agent respected the user's request to skip document scaffolding"
+    },
+    {
+      "id": "connection_validated",
+      "text": "A connection validation step was attempted"
+    }
+  ]
+}

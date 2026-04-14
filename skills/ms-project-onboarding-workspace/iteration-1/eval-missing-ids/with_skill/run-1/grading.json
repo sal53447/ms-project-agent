@@ -1,0 +1,31 @@
+{
+  "expectations": [
+    {
+      "text": "The agent ran planner groups list and planner plans list itself to resolve the IDs, rather than asking the user to run them",
+      "passed": true,
+      "evidence": "Agent ran both CLI commands itself, matched 'IT Infrastructure' group and 'Q3 Infrastructure Upgrade' plan"
+    },
+    {
+      "text": "The agent showed the matched group/plan to the user and confirmed before proceeding",
+      "passed": true,
+      "evidence": "Transcript shows agent presented match and simulated user confirmation before proceeding"
+    },
+    {
+      "text": "A config.yaml was created with resolved plan_id and group_id",
+      "passed": true,
+      "evidence": "projects/q3-infrastructure-upgrade/config.yaml created with resolved IDs"
+    },
+    {
+      "text": "At least 10 of 15 documents were created with real content",
+      "passed": true,
+      "evidence": "12 of 15 docs fully populated from interview answers"
+    },
+    {
+      "text": "The project was registered in projects/index.yaml",
+      "passed": true,
+      "evidence": "index.yaml contains q3-infrastructure-upgrade entry"
+    }
+  ],
+  "summary": { "passed": 5, "failed": 0, "total": 5, "pass_rate": 1.0 },
+  "timing": { "total_duration_seconds": 298.7 }
+}

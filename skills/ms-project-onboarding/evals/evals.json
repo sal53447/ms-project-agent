@@ -1,0 +1,20 @@
+{
+  "skill_name": "ms-project-onboarding",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "I want to add a new project to the agent. The project is called 'Website Redesign', the plan_id is 'plan-abc123', group_id is 'grp-xyz456'. The owner is sarah@company.com and it runs from 2026-05-01 to 2026-09-30.",
+      "expected_output": "Creates projects/website-redesign/config.yaml with the correct values, scaffolds all 15 doc stubs under projects/website-redesign/docs/, registers the project in projects/index.yaml, and attempts to validate the connection."
+    },
+    {
+      "id": 1,
+      "prompt": "I need to onboard a project but I don't have the plan_id or group_id yet. The project is called 'Q3 Infrastructure Upgrade'.",
+      "expected_output": "Runs `uv run planner groups list` to find the group, then `uv run planner plans list --group-id <id>` to find the plan — using the CLI tools itself rather than asking the user to run them. Confirms the match with the user before writing any files."
+    },
+    {
+      "id": 2,
+      "prompt": "Add project: name='Data Migration', plan_id='plan-dm99', group_id='grp-infra01'. Skip the docs for now, just the config and index.",
+      "expected_output": "Creates the config.yaml and index entry, acknowledges the user's request to skip docs (or asks to confirm), attempts connection validation."
+    }
+  ]
+}

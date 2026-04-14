@@ -1,0 +1,38 @@
+project:
+  name: "Website Redesign"
+  plan_id: "plan-abc123"          # required
+  group_id: "grp-xyz456"          # required
+  bucket_ids:
+    milestones: "bkt-001"
+    discovery: "bkt-002"
+    design: "bkt-003"
+    development: "bkt-004"
+    testing: "bkt-005"
+    launch: "bkt-006"
+    risks: "bkt-007"
+    backlog: "bkt-008"
+
+meta:
+  description: "Full redesign of the company public-facing website with a new brand identity, improved UX, and modern CMS."
+  owner: "sarah@company.com"
+  start_date: "2026-05-01"
+  end_date: "2026-09-30"
+  status: "active"
+  tags:
+    - "web"
+    - "design"
+    - "frontend"
+    - "cms"
+
+agent:
+  summary_schedule: "weekly"
+  milestone_bucket: "bkt-001"     # bucket ID tracking milestones
+  risk_bucket: "bkt-007"          # bucket ID tracking risks
+  priority_labels:
+    - "High"
+    - "Critical"
+
+documents:
+  requirements: "projects/website-redesign/docs/requirements.md"
+  decisions_log: "projects/website-redesign/docs/decision-log.md"
+  stakeholders: "projects/website-redesign/docs/stakeholders.md"

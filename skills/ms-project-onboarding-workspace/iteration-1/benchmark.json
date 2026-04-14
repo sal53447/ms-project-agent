@@ -1,0 +1,313 @@
+{
+  "metadata": {
+    "skill_name": "ms-project-onboarding",
+    "skill_path": "<path/to/skill>",
+    "executor_model": "<model-name>",
+    "analyzer_model": "<model-name>",
+    "timestamp": "2026-04-14T21:01:16Z",
+    "evals_run": [
+      0,
+      1,
+      2
+    ],
+    "runs_per_configuration": 3
+  },
+  "runs": [
+    {
+      "eval_id": 0,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "time_seconds": 258.3,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "A config.yaml was created under projects/website-redesign/ with the correct plan_id and group_id",
+          "passed": true,
+          "evidence": "projects/website-redesign/config.yaml exists with plan_id: plan-abc123, group_id: grp-xyz456"
+        },
+        {
+          "text": "The agent conducted an interview asking about scope, goals, milestones, risks, and stakeholders before writing documents",
+          "passed": true,
+          "evidence": "Transcript confirms all 9 interview areas covered before any files were written"
+        },
+        {
+          "text": "At least 10 of 15 documents were created with real content (not just empty stubs)",
+          "passed": true,
+          "evidence": "12 of 15 docs fully populated; 3 are stubs (change-requests, lessons-learned, meeting-notes) which is correct per the skill"
+        },
+        {
+          "text": "The project was registered in projects/index.yaml",
+          "passed": true,
+          "evidence": "projects/index.yaml contains entry for website-redesign with correct plan_id and group_id"
+        },
+        {
+          "text": "A connection validation step was attempted (tasks list or equivalent)",
+          "passed": true,
+          "evidence": "Agent simulated tasks list call and reported result to user"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 69.2,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "A config.yaml was created with the correct plan_id and group_id",
+          "passed": true,
+          "evidence": "projects/data-migration/config.yaml created with plan_id: plan-dm99, group_id: grp-infra01"
+        },
+        {
+          "text": "The project was registered in projects/index.yaml",
+          "passed": true,
+          "evidence": "index.yaml contains data-migration entry"
+        },
+        {
+          "text": "The agent respected the user's request to skip document scaffolding",
+          "passed": true,
+          "evidence": "Agent skipped Steps 3 and 4 (interview + docs) based on user intent \u2014 though skill has no explicit fast-path"
+        },
+        {
+          "text": "A connection validation step was attempted",
+          "passed": true,
+          "evidence": "Agent attempted tasks list validation (simulated 404, treated as success)"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 1,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "time_seconds": 298.7,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "The agent ran planner groups list and planner plans list itself to resolve the IDs, rather than asking the user to run them",
+          "passed": true,
+          "evidence": "Agent ran both CLI commands itself, matched 'IT Infrastructure' group and 'Q3 Infrastructure Upgrade' plan"
+        },
+        {
+          "text": "The agent showed the matched group/plan to the user and confirmed before proceeding",
+          "passed": true,
+          "evidence": "Transcript shows agent presented match and simulated user confirmation before proceeding"
+        },
+        {
+          "text": "A config.yaml was created with resolved plan_id and group_id",
+          "passed": true,
+          "evidence": "projects/q3-infrastructure-upgrade/config.yaml created with resolved IDs"
+        },
+        {
+          "text": "At least 10 of 15 documents were created with real content",
+          "passed": true,
+          "evidence": "12 of 15 docs fully populated from interview answers"
+        },
+        {
+          "text": "The project was registered in projects/index.yaml",
+          "passed": true,
+          "evidence": "index.yaml contains q3-infrastructure-upgrade entry"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 0,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.6,
+        "passed": 3,
+        "failed": 2,
+        "total": 5,
+        "time_seconds": 245.9,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "A config.yaml was created under projects/website-redesign/ with the correct plan_id and group_id",
+          "passed": true,
+          "evidence": "Baseline agent found existing config.yaml (created by with_skill agent \u2014 contamination issue; not independently created)"
+        },
+        {
+          "text": "The agent conducted an interview asking about scope, goals, milestones, risks, and stakeholders before writing documents",
+          "passed": false,
+          "evidence": "No interview step. Agent inferred content from existing files rather than asking the user"
+        },
+        {
+          "text": "At least 10 of 15 documents were created with real content (not just empty stubs)",
+          "passed": true,
+          "evidence": "12 docs created by inference \u2014 but based on files already present from with_skill run (contamination)"
+        },
+        {
+          "text": "The project was registered in projects/index.yaml",
+          "passed": true,
+          "evidence": "index.yaml updated \u2014 but found existing entries from with_skill run"
+        },
+        {
+          "text": "A connection validation step was attempted (tasks list or equivalent)",
+          "passed": false,
+          "evidence": "No connection validation step taken in baseline run"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.75,
+        "passed": 3,
+        "failed": 1,
+        "total": 4,
+        "time_seconds": 70.3,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "A config.yaml was created with the correct plan_id and group_id",
+          "passed": true,
+          "evidence": "Baseline found existing config.yaml from with_skill run (contamination \u2014 not independently created)"
+        },
+        {
+          "text": "The project was registered in projects/index.yaml",
+          "passed": true,
+          "evidence": "Baseline found existing index.yaml entry from with_skill run (contamination)"
+        },
+        {
+          "text": "The agent respected the user's request to skip document scaffolding",
+          "passed": true,
+          "evidence": "No docs created \u2014 user request was respected (baseline simply didn't know to create docs either)"
+        },
+        {
+          "text": "A connection validation step was attempted",
+          "passed": false,
+          "evidence": "No connection validation in baseline run"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 1,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.0,
+        "passed": 0,
+        "failed": 5,
+        "total": 5,
+        "time_seconds": 71.7,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "The agent ran planner groups list and planner plans list itself to resolve the IDs, rather than asking the user to run them",
+          "passed": false,
+          "evidence": "Baseline ran CLI commands but created a new plan rather than matching an existing one \u2014 no match+confirm step"
+        },
+        {
+          "text": "The agent showed the matched group/plan to the user and confirmed before proceeding",
+          "passed": false,
+          "evidence": "No confirmation step \u2014 agent picked a group and proceeded without user input"
+        },
+        {
+          "text": "A config.yaml was created with resolved plan_id and group_id",
+          "passed": false,
+          "evidence": "No config.yaml created \u2014 baseline focused only on CLI task creation in Planner"
+        },
+        {
+          "text": "At least 10 of 15 documents were created with real content",
+          "passed": false,
+          "evidence": "No project documents created at all \u2014 baseline only created tasks in Planner"
+        },
+        {
+          "text": "The project was registered in projects/index.yaml",
+          "passed": false,
+          "evidence": "No index.yaml registration \u2014 baseline only created tasks in Planner"
+        }
+      ],
+      "notes": []
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {
+        "mean": 1.0,
+        "stddev": 0.0,
+        "min": 1.0,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 208.7333,
+        "stddev": 122.5161,
+        "min": 69.2,
+        "max": 298.7
+      },
+      "tokens": {
+        "mean": 0.0,
+        "stddev": 0.0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "without_skill": {
+      "pass_rate": {
+        "mean": 0.45,
+        "stddev": 0.3969,
+        "min": 0.0,
+        "max": 0.75
+      },
+      "time_seconds": {
+        "mean": 129.3,
+        "stddev": 100.981,
+        "min": 70.3,
+        "max": 245.9
+      },
+      "tokens": {
+        "mean": 0.0,
+        "stddev": 0.0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "delta": {
+      "pass_rate": "+0.55",
+      "time_seconds": "+79.4",
+      "tokens": "+0"
+    }
+  },
+  "notes": []
+}

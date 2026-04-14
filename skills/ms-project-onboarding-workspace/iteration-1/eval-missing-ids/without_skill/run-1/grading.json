@@ -1,0 +1,31 @@
+{
+  "expectations": [
+    {
+      "text": "The agent ran planner groups list and planner plans list itself to resolve the IDs, rather than asking the user to run them",
+      "passed": false,
+      "evidence": "Baseline ran CLI commands but created a new plan rather than matching an existing one — no match+confirm step"
+    },
+    {
+      "text": "The agent showed the matched group/plan to the user and confirmed before proceeding",
+      "passed": false,
+      "evidence": "No confirmation step — agent picked a group and proceeded without user input"
+    },
+    {
+      "text": "A config.yaml was created with resolved plan_id and group_id",
+      "passed": false,
+      "evidence": "No config.yaml created — baseline focused only on CLI task creation in Planner"
+    },
+    {
+      "text": "At least 10 of 15 documents were created with real content",
+      "passed": false,
+      "evidence": "No project documents created at all — baseline only created tasks in Planner"
+    },
+    {
+      "text": "The project was registered in projects/index.yaml",
+      "passed": false,
+      "evidence": "No index.yaml registration — baseline only created tasks in Planner"
+    }
+  ],
+  "summary": { "passed": 0, "failed": 5, "total": 5, "pass_rate": 0.0 },
+  "timing": { "total_duration_seconds": 71.7 }
+}

@@ -1,0 +1,26 @@
+{
+  "expectations": [
+    {
+      "text": "A config.yaml was created with the correct plan_id and group_id",
+      "passed": true,
+      "evidence": "Baseline found existing config.yaml from with_skill run (contamination — not independently created)"
+    },
+    {
+      "text": "The project was registered in projects/index.yaml",
+      "passed": true,
+      "evidence": "Baseline found existing index.yaml entry from with_skill run (contamination)"
+    },
+    {
+      "text": "The agent respected the user's request to skip document scaffolding",
+      "passed": true,
+      "evidence": "No docs created — user request was respected (baseline simply didn't know to create docs either)"
+    },
+    {
+      "text": "A connection validation step was attempted",
+      "passed": false,
+      "evidence": "No connection validation in baseline run"
+    }
+  ],
+  "summary": { "passed": 3, "failed": 1, "total": 4, "pass_rate": 0.75 },
+  "timing": { "total_duration_seconds": 70.3 }
+}

@@ -1,0 +1,31 @@
+{
+  "expectations": [
+    {
+      "text": "A config.yaml was created under projects/website-redesign/ with the correct plan_id and group_id",
+      "passed": true,
+      "evidence": "Baseline agent found existing config.yaml (created by with_skill agent — contamination issue; not independently created)"
+    },
+    {
+      "text": "The agent conducted an interview asking about scope, goals, milestones, risks, and stakeholders before writing documents",
+      "passed": false,
+      "evidence": "No interview step. Agent inferred content from existing files rather than asking the user"
+    },
+    {
+      "text": "At least 10 of 15 documents were created with real content (not just empty stubs)",
+      "passed": true,
+      "evidence": "12 docs created by inference — but based on files already present from with_skill run (contamination)"
+    },
+    {
+      "text": "The project was registered in projects/index.yaml",
+      "passed": true,
+      "evidence": "index.yaml updated — but found existing entries from with_skill run"
+    },
+    {
+      "text": "A connection validation step was attempted (tasks list or equivalent)",
+      "passed": false,
+      "evidence": "No connection validation step taken in baseline run"
+    }
+  ],
+  "summary": { "passed": 3, "failed": 2, "total": 5, "pass_rate": 0.6 },
+  "timing": { "total_duration_seconds": 245.9 }
+}

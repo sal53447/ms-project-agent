@@ -1,0 +1,21 @@
+projects:
+  - slug: "website-redesign"
+    name: "Website Redesign"
+    plan_id: "plan-abc123"
+    group_id: "grp-xyz456"
+    status: "active"
+    config: "projects/website-redesign/config.yaml"
+
+  - slug: "data-migration"
+    name: "Data Migration"
+    plan_id: "plan-dm99"
+    group_id: "grp-infra01"
+    status: "active"
+    config: "projects/data-migration/config.yaml"
+
+  - slug: "q3-infrastructure-upgrade"
+    name: "Q3 Infrastructure Upgrade"
+    plan_id: "BxK7mNpQ2r_cDf3sT8vZwA"
+    group_id: "a3f92b11-4c7d-4e8a-b2f1-9d8e7c6f5a4b"
+    status: "active"
+    config: "projects/q3-infrastructure-upgrade/config.yaml"

@@ -1,0 +1,27 @@
+{
+  "eval_id": 0,
+  "eval_name": "eval-happy-path",
+  "prompt": "I want to add a new project to the agent. The project is called 'Website Redesign', the plan_id is 'plan-abc123', group_id is 'grp-xyz456'. The owner is sarah@company.com and it runs from 2026-05-01 to 2026-09-30.",
+  "assertions": [
+    {
+      "id": "config_created",
+      "text": "A config.yaml was created under projects/website-redesign/ with the correct plan_id and group_id"
+    },
+    {
+      "id": "interview_conducted",
+      "text": "The agent conducted an interview asking about scope, goals, milestones, risks, and stakeholders before writing documents"
+    },
+    {
+      "id": "docs_populated",
+      "text": "At least 10 of 15 documents were created with real content (not just empty stubs)"
+    },
+    {
+      "id": "index_registered",
+      "text": "The project was registered in projects/index.yaml"
+    },
+    {
+      "id": "connection_validated",
+      "text": "A connection validation step was attempted (tasks list or equivalent)"
+    }
+  ]
+}
