@@ -1,0 +1,2 @@
+- [test-agent project context](project_test_agent.md) — methodology (Kanban), bucket names, health history, and patterns for the test-agent plan
+- [User role: Pouyan Salehi](user_role.md) — sole developer/owner, assign all tasks to pouyan.salehi@stock-solution.de
