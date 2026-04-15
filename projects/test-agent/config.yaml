@@ -1,0 +1,33 @@
+project:
+  name: "test agent"
+  plan_id: "WWclzqKzu0y9Abfr3qx4yZcAFNzi"
+  group_id: "c90d68f8-b37d-414a-930d-baf7138fb1ec"
+  bucket_ids:
+    phase1: "D--OF-tBmEeWpLH6zIjtGJcAAukV"
+    phase2: "F0qYvhHzQUW728AUSppvJZcACk_M"
+    admin: "ZFxd2GlkG0mBOLKVo0t7pZcAHUUo"
+    qa: "yWh9JA8ZvE6lhPdRwEYEHJcAI5WJ"
+
+meta:
+  description: "Agent system for controlling MS Planner project management, with Microsoft Teams integration for conversational project onboarding."
+  owner: "pouyan.salehi@stock-solution.de"
+  start_date: "2026-04-15"
+  end_date: ""
+  status: "active"
+  tags:
+    - "agent"
+    - "teams-integration"
+    - "personal-project"
+
+agent:
+  summary_schedule: "weekly"
+  milestone_bucket: ""
+  risk_bucket: ""
+  priority_labels:
+    - "High"
+    - "Critical"
+
+documents:
+  requirements: ""
+  decisions_log: ""
+  stakeholders: ""

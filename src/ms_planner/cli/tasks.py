@@ -104,6 +104,9 @@ def update_task(
     progress: Annotated[int | None, typer.Option("--progress", help="Percent complete (0, 50, 100)")] = None,
     priority: Annotated[int | None, typer.Option("--priority", help="Priority (0-10, lower=higher)")] = None,
     title: Annotated[str | None, typer.Option("--title", help="New title")] = None,
+    bucket_id: Annotated[str | None, typer.Option("--bucket-id", help="Move task to a different bucket")] = None,
+    due_date: Annotated[str | None, typer.Option("--due-date", help="Due date (YYYY-MM-DD)")] = None,
+    start_date: Annotated[str | None, typer.Option("--start-date", help="Start date (YYYY-MM-DD)")] = None,
 ):
     """Update a task."""
     service = _get_task_service()
@@ -114,6 +117,12 @@ def update_task(
         kwargs["priority"] = priority
     if title is not None:
         kwargs["title"] = title
+    if bucket_id is not None:
+        kwargs["bucket_id"] = bucket_id
+    if due_date is not None:
+        kwargs["due_date_time"] = f"{due_date}T00:00:00Z"
+    if start_date is not None:
+        kwargs["start_date_time"] = f"{start_date}T00:00:00Z"
     if not kwargs:
         console.print("[yellow]No updates specified[/yellow]")
         return

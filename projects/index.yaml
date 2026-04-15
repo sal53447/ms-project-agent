@@ -19,3 +19,10 @@ projects:
     group_id: "a3f92b11-4c7d-4e8a-b2f1-9d8e7c6f5a4b"
     status: "active"
     config: "projects/q3-infrastructure-upgrade/config.yaml"
+
+  - slug: "test-agent"
+    name: "test agent"
+    plan_id: "WWclzqKzu0y9Abfr3qx4yZcAFNzi"
+    group_id: "c90d68f8-b37d-414a-930d-baf7138fb1ec"
+    status: "active"
+    config: "projects/test-agent/config.yaml"

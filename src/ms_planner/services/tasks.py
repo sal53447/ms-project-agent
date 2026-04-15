@@ -44,6 +44,8 @@ class TaskService:
         return Task.model_validate(data)
 
     async def update(self, task_id: str, **kwargs: Any) -> None:
+        # Fetch task first to get the current ETag (required for PATCH)
+        await self.get(task_id)
         body = {}
         key_map = {
             "percent_complete": "percentComplete",

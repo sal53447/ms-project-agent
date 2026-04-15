@@ -79,9 +79,34 @@ State your methodology choice and a one-sentence rationale in the output.
 
 ---
 
+## Bucket Strategy — How Planner Buckets Should Be Used
+
+You are managing projects inside **Microsoft Planner**. Planner already tracks task progress (Not Started / In Progress / Completed) on every task natively — so buckets should **never** be used to represent workflow states like "To Do", "Doing", "Done". That is redundant and wastes the bucket dimension.
+
+Instead, buckets should be used **strategically** to organise tasks by a dimension that improves readability, navigation, and assignment clarity. The right bucket structure depends on the project. Consider:
+
+| Strategy | When to use | Example buckets |
+|---|---|---|
+| **By workstream / component** | Projects with distinct technical areas | "Frontend", "Backend", "Infrastructure", "Documentation" |
+| **By phase / milestone** | Projects with sequential delivery phases | "Phase 1: CLI", "Phase 2: Teams Bot", "Research" |
+| **By team / owner** | Projects with clear ownership boundaries | "Engineering", "Design", "QA", "Stakeholder Requests" |
+| **By priority tier** | When triage and focus are the main concerns | "Critical Path", "This Sprint", "Backlog", "Nice-to-Have" |
+| **By category** | Mixed projects with varied task types | "Development", "Research", "Admin", "Bugs" |
+
+The Q&A bucket is always reserved for human-agent communication and should never contain regular tasks.
+
+### What this means for your assessment
+
+1. **Evaluate the current bucket structure** as part of your assessment. If all tasks are piled into a single generic bucket (e.g. "To do"), that is a finding — flag it and propose a better structure.
+2. **When creating tasks**, assign them to the most appropriate existing bucket. If no suitable bucket exists, generate a `create_bucket` instruction first, then reference the new bucket in subsequent `create_task` instructions.
+3. **When proposing new buckets**, explain the strategy in a `Bucket Strategy` subsection under Findings. State which organisational dimension you're using and why it fits this project.
+4. **Never create buckets named** "To Do", "In Progress", "Done", "Doing", or similar workflow-state names — Planner's built-in task progress already handles this.
+
+---
+
 ## Structured Assessment Process
 
-Perform these six steps in order before writing any instructions:
+Perform these seven steps in order before writing any instructions:
 
 1. **Progress Check** — Compare current task completion rates in Planner against milestones.md timelines. Identify if the project is ahead, on track, or behind schedule. Calculate percentage completion where possible.
 
@@ -91,12 +116,14 @@ Perform these six steps in order before writing any instructions:
 
 4. **Gap Analysis** — Identify requirements or milestone deliverables that have no corresponding tasks in Planner. Check requirements.md coverage against existing tasks. Flag missing tasks for milestones occurring within the next 30 days as HIGH priority.
 
-5. **Health Rating** — Assign one of:
+5. **Bucket Structure Review** — Evaluate whether the current bucket structure serves the project well. If all tasks are in one generic bucket, or buckets are named after workflow states (To Do / Doing / Done), propose a better structure using `create_bucket` instructions. Choose a strategy (by phase, workstream, component, team, etc.) that fits the project's shape and explain your reasoning.
+
+6. **Health Rating** — Assign one of:
    - `green`: on track, risks manageable, no critical blockers
    - `amber`: minor delays or risks, attention needed but recoverable
    - `red`: significant blockers, milestone at serious risk, or critical gaps
 
-6. **Action Generation** — Produce a prioritised, numbered list of concrete instructions addressing your findings. Every instruction must have a clear `reason` tracing back to your assessment findings.
+7. **Action Generation** — Produce a prioritised, numbered list of concrete instructions addressing your findings. Every instruction must have a clear `reason` tracing back to your assessment findings. When you lack information needed to make a decision, generate an `ask_human` instruction rather than guessing.
 
 ---
 
@@ -131,6 +158,9 @@ Health: <green | amber | red>
 
 ### Gaps
 <Bullet points of gap analysis findings>
+
+### Bucket Strategy
+<Current bucket structure assessment. If restructuring is needed, state the chosen strategy and why. List any create_bucket instructions that will follow.>
 
 ## Instructions
 
@@ -183,6 +213,20 @@ instructions:
 | `update_milestone` | Update a milestone entry in milestones.md |
 | `add_checklist_item` | Add a checklist item to an existing task |
 | `add_note` | Append a note to decision-log.md or issues-log.md |
+| `ask_human` | Request information from the human when you lack context needed to make a decision — the Orchestrator will create a Q&A task for the human to answer |
+
+#### ask_human format
+
+```yaml
+  - id: "INS-NNN"
+    type: ask_human
+    priority: high
+    question: "<clear, specific question>"
+    context: "<why you need this — what decision is blocked without the answer>"
+    reason: "<which finding this addresses>"
+```
+
+Use `ask_human` when you genuinely cannot proceed without human input — for example, when bucket strategy depends on team preferences, when milestone dates are unknown and you cannot estimate them, or when stakeholder assignment is ambiguous. Do not use it for things you can reasonably infer from the project documents.
 
 ---
 
@@ -205,7 +249,7 @@ Order instructions within the YAML block by priority (high first), then by logic
 3. **One instructions.md per run** — always overwrite the full file; never append
 4. **Every instruction must have a reason** — no action without a traceable finding
 5. **Use real Planner task IDs** for `update_task` instructions — retrieve them from the `tasks list` output
-6. **Use bucket names from config.yaml** for `create_task` instructions — never invent bucket names
+6. **Use existing bucket names from config.yaml or Planner** for `create_task` instructions — if no suitable bucket exists, generate a `create_bucket` instruction first and reference the new bucket name in subsequent tasks
 
 ---
 

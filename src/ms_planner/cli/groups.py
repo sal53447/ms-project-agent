@@ -39,10 +39,19 @@ def list_groups(
         path = "/groups?$filter=groupTypes/any(c:c eq 'Unified')&$select=id,displayName,description,mail&$top=100"
         if filter:
             path = f"/groups?$filter={filter} and groupTypes/any(c:c eq 'Unified')&$select=id,displayName,description,mail&$top=100"
-        return await client.get(path)
+        all_groups = []
+        while path:
+            data = await client.get(path)
+            all_groups.extend(data.get("value", []))
+            next_link = data.get("@odata.nextLink", "")
+            # nextLink is an absolute URL; strip the base to get a relative path
+            if next_link:
+                path = next_link.replace("https://graph.microsoft.com/v1.0", "")
+            else:
+                path = None
+        return all_groups
 
-    data = _run(_fetch())
-    groups = data.get("value", [])
+    groups = _run(_fetch())
 
     if json:
         console.print(json_lib.dumps(groups, indent=2, default=str))
