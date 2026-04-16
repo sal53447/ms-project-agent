@@ -80,14 +80,19 @@ def test_tasks_update_description(mock_get_svc):
     mock_svc.update.assert_not_called()
 
 
+@patch("ms_planner.cli.tasks._get_user_service")
 @patch("ms_planner.cli.tasks._get_task_service")
-def test_tasks_update_assign(mock_get_svc):
-    mock_svc = AsyncMock()
-    mock_get_svc.return_value = mock_svc
+def test_tasks_update_assign_by_id(mock_get_task_svc, mock_get_user_svc):
+    """Assign by user ID — no email resolution needed."""
+    mock_task_svc = AsyncMock()
+    mock_user_svc = AsyncMock()
+    mock_user_svc.resolve_to_id.return_value = "user-id-1"
+    mock_get_task_svc.return_value = mock_task_svc
+    mock_get_user_svc.return_value = mock_user_svc
 
     result = runner.invoke(app, ["tasks", "update", "t1", "--assign", "user-id-1"])
     assert result.exit_code == 0
-    mock_svc.update.assert_called_once_with(
+    mock_task_svc.update.assert_called_once_with(
         "t1",
         assignments={
             "user-id-1": {
@@ -98,14 +103,42 @@ def test_tasks_update_assign(mock_get_svc):
     )
 
 
+@patch("ms_planner.cli.tasks._get_user_service")
 @patch("ms_planner.cli.tasks._get_task_service")
-def test_tasks_update_assign_multiple(mock_get_svc):
-    mock_svc = AsyncMock()
-    mock_get_svc.return_value = mock_svc
+def test_tasks_update_assign_by_email(mock_get_task_svc, mock_get_user_svc):
+    """Assign by email — resolved to user ID via UserService."""
+    mock_task_svc = AsyncMock()
+    mock_user_svc = AsyncMock()
+    mock_user_svc.resolve_to_id.return_value = "resolved-guid"
+    mock_get_task_svc.return_value = mock_task_svc
+    mock_get_user_svc.return_value = mock_user_svc
+
+    result = runner.invoke(app, ["tasks", "update", "t1", "--assign", "user@example.com"])
+    assert result.exit_code == 0
+    mock_user_svc.resolve_to_id.assert_called_once_with("user@example.com")
+    mock_task_svc.update.assert_called_once_with(
+        "t1",
+        assignments={
+            "resolved-guid": {
+                "@odata.type": "#microsoft.graph.plannerAssignment",
+                "orderHint": " !",
+            }
+        },
+    )
+
+
+@patch("ms_planner.cli.tasks._get_user_service")
+@patch("ms_planner.cli.tasks._get_task_service")
+def test_tasks_update_assign_multiple(mock_get_task_svc, mock_get_user_svc):
+    mock_task_svc = AsyncMock()
+    mock_user_svc = AsyncMock()
+    mock_user_svc.resolve_to_id.side_effect = ["uid-1", "uid-2"]
+    mock_get_task_svc.return_value = mock_task_svc
+    mock_get_user_svc.return_value = mock_user_svc
 
     result = runner.invoke(app, ["tasks", "update", "t1", "--assign", "uid-1", "--assign", "uid-2"])
     assert result.exit_code == 0
-    call_kwargs = mock_svc.update.call_args[1]
+    call_kwargs = mock_task_svc.update.call_args[1]
     assert "uid-1" in call_kwargs["assignments"]
     assert "uid-2" in call_kwargs["assignments"]
 

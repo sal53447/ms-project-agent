@@ -10,6 +10,7 @@ from ms_planner.auth import get_token
 from ms_planner.client import GraphClient
 from ms_planner.config import Settings
 from ms_planner.services.tasks import TaskService
+from ms_planner.services.users import UserService
 
 tasks_app = typer.Typer(help="Manage tasks")
 console = Console()
@@ -19,6 +20,12 @@ def _get_task_service() -> TaskService:
     settings = Settings()
     client = GraphClient(token_factory=lambda: get_token(settings))
     return TaskService(client)
+
+
+def _get_user_service() -> UserService:
+    settings = Settings()
+    client = GraphClient(token_factory=lambda: get_token(settings))
+    return UserService(client)
 
 
 def _run(coro):
@@ -126,9 +133,11 @@ def update_task(
     if start_date is not None:
         kwargs["start_date_time"] = f"{start_date}T00:00:00Z"
     if assign is not None:
+        user_svc = _get_user_service()
+        resolved_ids = [_run(user_svc.resolve_to_id(a)) for a in assign]
         kwargs["assignments"] = {
             uid: {"@odata.type": "#microsoft.graph.plannerAssignment", "orderHint": " !"}
-            for uid in assign
+            for uid in resolved_ids
         }
     if not kwargs and description is None:
         console.print("[yellow]No updates specified[/yellow]")
