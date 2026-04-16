@@ -6,6 +6,7 @@ from ms_planner.cli.groups import groups_app
 from ms_planner.cli.plans import plans_app
 from ms_planner.cli.buckets import buckets_app
 from ms_planner.cli.tasks import tasks_app
+from ms_planner.cli.snapshot import snapshot_app
 from ms_planner.exceptions import (
     PlannerConflictError,
     PlannerForbiddenError,
@@ -21,6 +22,7 @@ app.add_typer(groups_app, name="groups")
 app.add_typer(plans_app, name="plans")
 app.add_typer(buckets_app, name="buckets")
 app.add_typer(tasks_app, name="tasks")
+app.add_typer(snapshot_app, name="snapshot")
 
 console = Console(stderr=True)
 

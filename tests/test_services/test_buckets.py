@@ -34,14 +34,16 @@ async def test_create_bucket(service, mock_client):
 
 @pytest.mark.asyncio
 async def test_update_bucket(service, mock_client):
+    mock_client.get.return_value = {"id": "b1", "planId": "p1", "name": "Phase 1"}
     mock_client.patch.return_value = None
-    await service.update("b1", name="In Progress")
+    await service.update("b1", name="Phase 1 — Done")
     mock_client.patch.assert_called_once_with(
-        "/planner/buckets/b1", {"name": "In Progress"}
+        "/planner/buckets/b1", {"name": "Phase 1 — Done"}
     )
 
 
 @pytest.mark.asyncio
 async def test_delete_bucket(service, mock_client):
+    mock_client.get.return_value = {"id": "b1", "planId": "p1", "name": "Phase 1"}
     await service.delete("b1")
     mock_client.delete.assert_called_once_with("/planner/buckets/b1")

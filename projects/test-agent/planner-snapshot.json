@@ -1,0 +1,96 @@
+{
+  "taken_at": "2026-04-16T10:39:25Z",
+  "plan_id": "WWclzqKzu0y9Abfr3qx4yZcAFNzi",
+  "tasks": [
+    {
+      "task_id": "y8SnIUjvEU-WNfQtdRdhS5cAG8Gi",
+      "title": "[Q] Has the Executor agent Bash/Write/Edit permission issue been resolved? If not, what is the plan?",
+      "bucket_id": "yWh9JA8ZvE6lhPdRwEYEHJcAI5WJ",
+      "bucket_name": "Q&A",
+      "status": "not_started",
+      "start_date": null,
+      "due_date": null,
+      "assigned_to": []
+    },
+    {
+      "task_id": "4AUsZYY9aUOSkF8njOBcjpcAC5lR",
+      "title": "[Q] Bucket structure: keep phase-based (config.yaml / decision-log) or switch to Kanban (Backlog/In Progress/Done)? Did Run 2 bucket restructure instructions actually execute in Planner?",
+      "bucket_id": "yWh9JA8ZvE6lhPdRwEYEHJcAI5WJ",
+      "bucket_name": "Q&A",
+      "status": "not_started",
+      "start_date": null,
+      "due_date": null,
+      "assigned_to": []
+    },
+    {
+      "task_id": "sDZDeCdNqE-ad3YiusUripcAKXM3",
+      "title": "Design task lifecycle process: what happens when humans update task status in Planner",
+      "bucket_id": "D--OF-tBmEeWpLH6zIjtGJcAAukV",
+      "bucket_name": "Phase 1: CLI + Agent",
+      "status": "not_started",
+      "start_date": null,
+      "due_date": "2026-04-30",
+      "assigned_to": []
+    },
+    {
+      "task_id": "fYbOxO-TJ0y0m2wMpXoxCJcAAvmO",
+      "title": "Update config.yaml: populate agent configuration fields",
+      "bucket_id": "ZFxd2GlkG0mBOLKVo0t7pZcAHUUo",
+      "bucket_name": "Admin",
+      "status": "not_started",
+      "start_date": null,
+      "due_date": "2026-04-22",
+      "assigned_to": []
+    },
+    {
+      "task_id": "uVg9CWOJ-0mwNGJEZkViWJcAEoSa",
+      "title": "Validate project onboarding workflow end-to-end",
+      "bucket_id": "D--OF-tBmEeWpLH6zIjtGJcAAukV",
+      "bucket_name": "Phase 1: CLI + Agent",
+      "status": "not_started",
+      "start_date": null,
+      "due_date": "2026-05-22",
+      "assigned_to": []
+    },
+    {
+      "task_id": "cwiLNJYF7k2ONLJ4rInxS5cABq2K",
+      "title": "Complete multi-agent system: Orchestrator and Executor agents",
+      "bucket_id": "D--OF-tBmEeWpLH6zIjtGJcAAukV",
+      "bucket_name": "Phase 1: CLI + Agent",
+      "status": "not_started",
+      "start_date": null,
+      "due_date": "2026-05-15",
+      "assigned_to": []
+    },
+    {
+      "task_id": "QZRCpwlHlka41HJM7_TG4ZcAMgzE",
+      "title": "Create Planner tasks for completed Phase 1 work (backfill)",
+      "bucket_id": "D--OF-tBmEeWpLH6zIjtGJcAAukV",
+      "bucket_name": "Phase 1: CLI + Agent",
+      "status": "not_started",
+      "start_date": null,
+      "due_date": "2026-04-17",
+      "assigned_to": []
+    },
+    {
+      "task_id": "9QIA4iwTTEKr4bObnx7TVpcAMOuj",
+      "title": "Set milestone target dates for Phase 1 and Phase 2",
+      "bucket_id": "ZFxd2GlkG0mBOLKVo0t7pZcAHUUo",
+      "bucket_name": "Admin",
+      "status": "not_started",
+      "start_date": null,
+      "due_date": "2026-04-22",
+      "assigned_to": []
+    },
+    {
+      "task_id": "4EtXneZ9W0awkcv0SGiTGJcADjpc",
+      "title": "Research: Azure Bot Service and Teams bot registration requirements",
+      "bucket_id": "F0qYvhHzQUW728AUSppvJZcACk_M",
+      "bucket_name": "Phase 2: Teams Bot",
+      "status": "not_started",
+      "start_date": null,
+      "due_date": "2026-04-30",
+      "assigned_to": []
+    }
+  ]
+}

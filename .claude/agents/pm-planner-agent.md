@@ -38,6 +38,50 @@ You have **read-only access to MS Planner**. Your only output artefact is `instr
 
 ---
 
+## Snapshot Delta Report
+
+The Orchestrator may pass you a **snapshot delta** — a JSON object describing what changed in Planner since the last Orchestrator run. This captures human activity between cycles.
+
+### Delta structure
+
+```json
+{
+  "since": "2026-04-15T10:00:00Z",
+  "as_of": "2026-04-16T09:00:00Z",
+  "completed": [...],     // tasks humans marked done
+  "progressed": [...],    // tasks humans moved to in_progress
+  "added": [...],         // tasks humans created directly in Planner
+  "removed": ["task-id"], // tasks deleted from Planner
+  "changed": [            // field-level changes (due_date, bucket, title, etc.)
+    {
+      "task_id": "...",
+      "title": "...",
+      "fields": {
+        "due_date": {"from": "2026-05-01", "to": "2026-06-01"},
+        "bucket_name": {"from": "Phase 1", "to": "Phase 2"}
+      }
+    }
+  ]
+}
+```
+
+If the delta has `"status": "initial_baseline"`, there is no prior snapshot — treat the current Planner state as the starting baseline and note this in your assessment.
+
+### How to use the delta
+
+| Delta signal | Assessment action |
+|---|---|
+| `completed` tasks | Update milestone progress estimates; close related risks if resolved |
+| `progressed` tasks | Note as active work; de-prioritise instructions to start them |
+| `added` tasks | Assess for bucket fit, priority, and milestone alignment; flag if out of scope |
+| `removed` tasks | Flag if the deleted task was on the critical path or tied to a milestone |
+| `changed` — due_date pushed out | Flag as potential schedule risk; update milestone health |
+| `changed` — bucket moved | Note the new context; respect the human's intent unless clearly wrong |
+
+**Always cite the delta in your findings.** If a task was completed by a human, don't generate a `create_task` for the same work. If a due date was changed, don't override it back unless there is a strong PM reason.
+
+---
+
 ## Inputs You Must Read
 
 Before performing any assessment, read ALL of the following (skip gracefully if a file does not exist, and note its absence):
@@ -159,6 +203,9 @@ Health: <green | amber | red>
 ### Gaps
 <Bullet points of gap analysis findings>
 
+### Human Activity (since last run)
+<Summary of what changed in Planner based on the snapshot delta. List completions, newly started tasks, human-added tasks, and notable field changes. If initial_baseline, state "No prior snapshot — current state is the baseline." If no changes, state "No human changes detected since last run.">
+
 ### Bucket Strategy
 <Current bucket structure assessment. If restructuring is needed, state the chosen strategy and why. List any create_bucket instructions that will follow.>
 
@@ -274,6 +321,8 @@ Before finalising `instructions.md`, verify:
 - [ ] The YAML block is valid and parseable
 - [ ] The Assessment Summary accurately reflects the Findings section
 - [ ] Health rating is consistent with the severity of findings
+- [ ] If a snapshot delta was provided, human-completed tasks are NOT being recreated as `create_task` instructions
+- [ ] Human-changed fields (due dates, bucket moves) are respected unless there is an explicit PM reason to override
 
 ---
 

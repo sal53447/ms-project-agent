@@ -34,7 +34,23 @@ Read `projects/<slug>/config.yaml`. Extract:
 
 If config.yaml doesn't exist, stop and tell the user to onboard the project first (using the `ms-project-onboarding` skill).
 
-### Step 2 — Ensure Q&A bucket exists
+### Step 2 — Snapshot diff (detect human changes since last run)
+
+Run a diff against the existing snapshot to detect what changed in Planner since the last Orchestrator run:
+
+```bash
+uv run planner snapshot diff --plan-id <plan_id> --project-dir projects/<slug>
+```
+
+Capture the JSON output. There are two possible outcomes:
+
+**No prior snapshot** (`"status": "initial_baseline"` in output): This is the first run. The current Planner state will become the baseline. Note this in your context — the PM Agent will see the full task list but no delta.
+
+**Delta output**: A JSON object with `completed`, `progressed`, `added`, `removed`, and `changed` arrays. Pass this to the PM Agent in Step 5 so it can react to human activity.
+
+Store the delta output (or the initial-baseline note) as `snapshot_delta` — you will use it in Step 5.
+
+### Step 3 — Ensure Q&A bucket exists
 
 ```bash
 uv run planner buckets list --plan-id <plan_id>
@@ -47,7 +63,7 @@ uv run planner buckets create --plan-id <plan_id> --name "Q&A"
 
 If you had to create it or if `bucket_ids.qa` is missing from config.yaml, save the bucket ID back to config.yaml under `project.bucket_ids.qa`.
 
-### Step 3 — Read Q&A bucket
+### Step 4 — Read Q&A bucket
 
 List all tasks in the plan and filter to the Q&A bucket:
 ```bash
@@ -56,7 +72,7 @@ uv run planner tasks list --plan-id <plan_id>
 
 Filter results to only tasks whose bucket ID matches `bucket_ids.qa`.
 
-### Step 4 — Classify Q&A items
+### Step 5 — Classify Q&A items
 
 Separate Q&A tasks by status:
 
@@ -72,7 +88,7 @@ Build two lists:
 - `qa_context`: all `not_started` items (background knowledge)
 - `qa_requests`: all `in_progress` items (things to act on)
 
-### Step 5 — Run the PM Agent
+### Step 6 — Run the PM Agent
 
 Invoke the **`pm-planner-agent`** using the Agent tool with `subagent_type: "pm-planner-agent"`.
 
@@ -82,6 +98,7 @@ The PM Agent needs the full context package in its prompt:
 - The plan_id
 - The `qa_context` list (Q&A not_started tasks — for background)
 - The `qa_requests` list (Q&A in_progress tasks — for action)
+- The `snapshot_delta` from Step 2 (JSON — human activity since last run, or "initial_baseline")
 - Any specific concerns the user raised
 
 The PM Agent will:
@@ -92,15 +109,15 @@ The PM Agent will:
 
 Wait for the PM Agent to complete before proceeding.
 
-### Step 6 — Parse instructions.md
+### Step 7 — Parse instructions.md
 
 Read `projects/<slug>/instructions.md` and parse the YAML `instructions` block.
 
 Split instructions into two groups:
-- **`ask_human`** instructions → handle in Step 7
-- **Action instructions** (`create_task`, `update_task`, `create_bucket`, `flag_risk`, `update_milestone`, `add_checklist_item`, `add_note`) → handle in Step 8
+- **`ask_human`** instructions → handle in Step 8
+- **Action instructions** (`create_task`, `update_task`, `create_bucket`, `flag_risk`, `update_milestone`, `add_checklist_item`, `add_note`) → handle in Step 9
 
-### Step 7 — Handle ask_human instructions
+### Step 8 — Handle ask_human instructions
 
 For each `ask_human` instruction, create a task in the Q&A bucket:
 
@@ -113,7 +130,7 @@ uv run planner tasks create \
 
 The task starts as `not_started`. The human answers by editing the description and setting status to `in_progress`. On the next Orchestrator run, that answer becomes an active Q&A request.
 
-### Step 8 — Spawn Executor agents
+### Step 9 — Spawn Executor agents
 
 For each action instruction (not `ask_human`), spawn one **`executor-agent`** using the Agent tool with `subagent_type: "executor-agent"`.
 
@@ -136,7 +153,7 @@ Instruction:
   id: "INS-001"
   type: create_task
   priority: high
-  bucket: "To do"
+  bucket: "Phase 1"
   title: "Research Azure Bot Service requirements"
   description: "Investigate what Azure services and permissions are needed for a Teams bot."
   assigned_to: ""
@@ -148,7 +165,7 @@ Read config.yaml for plan_id and bucket_ids, execute the instruction, and report
 
 Wait for all Executors to complete.
 
-### Step 9 — Write execution log
+### Step 10 — Write execution log
 
 After all Executors finish, collect their results and append to `projects/<slug>/execution-log.md`.
 
@@ -170,12 +187,22 @@ Instructions processed: <N>
 
 If the file doesn't exist yet, create it with a `# Execution Log` heading.
 
-### Step 10 — Close completed Q&A tasks
+### Step 11 — Take new snapshot
+
+Archive the current snapshot and capture a fresh one reflecting the post-execution state:
+
+```bash
+uv run planner snapshot take --plan-id <plan_id> --project-dir projects/<slug>
+```
+
+This archives the pre-run snapshot to `snapshot-archive/` and writes the new current state to `planner-snapshot.json`. The next Orchestrator run will diff against this snapshot.
+
+### Step 12 — Close completed Q&A tasks
 
 For each `in_progress` Q&A task that was fully addressed by the PM Agent's instructions and successfully executed:
 
 ```bash
-uv run planner tasks update --task-id <id> --progress completed
+uv run planner tasks update <task_id> --progress 100
 ```
 
 A Q&A task is considered addressed when:
@@ -184,7 +211,7 @@ A Q&A task is considered addressed when:
 
 If unclear whether a request was fully addressed, leave it as `in_progress` for the next run.
 
-### Step 11 — Report to the user
+### Step 13 — Report to the user
 
 Summarise what happened:
 - PM Agent health rating and key findings
@@ -192,6 +219,7 @@ Summarise what happened:
 - How many succeeded / failed / were ask_human
 - Any Q&A tasks created for the human
 - Any Q&A tasks closed
+- Summary of human changes detected in the snapshot delta (if any)
 
 ---
 

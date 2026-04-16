@@ -98,6 +98,7 @@ async def test_create_task_with_bucket(service, mock_client):
 
 @pytest.mark.asyncio
 async def test_update_task(service, mock_client):
+    mock_client.get.return_value = {"id": "t1", "planId": "p1", "title": "Task 1"}
     mock_client.patch.return_value = None
     await service.update("t1", percent_complete=100)
     mock_client.patch.assert_called_once_with(
