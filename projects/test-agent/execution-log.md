@@ -47,3 +47,28 @@ Instructions processed: 11
 Executor agents executed successfully for flag_risk, update_milestone, and add_note instructions. Description updates (INS-003, INS-004, INS-005) skipped — the CLI `tasks update` command does not expose a `--description` flag; the `update_details` service method exists but is not wired to a CLI command. Add `--description` to `tasks update` as a follow-up CLI gap.
 
 Snapshot system activated for first time this run. Post-execution snapshot written: 9 tasks captured (7 pre-existing + 2 new Q&A tasks).
+
+## Run — 2026-04-16T11:00:00Z
+
+Triggered by: manual
+Instructions processed: 13
+
+| Instruction | Type | Status | Detail |
+|---|---|---|---|
+| INS-001 | add_note | done | issues-log.md updated — Executor permission issue marked Resolved |
+| INS-002 | add_note | done | risk-register.md updated — R2 (Teams bot requirements) closed |
+| INS-003 | add_note | done | dependencies.md updated — Azure Bot Service row set to Researched |
+| INS-004 | update_milestone | done | Phase 2 status confirmed at-risk (no change needed) |
+| INS-005 | create_task | done | Task created: 7z8VGIRg5UeZrcCsT2ZJ15cAPoLy — Phase 2 planning: define architecture and create task breakdown (due 2026-05-01) |
+| INS-006 | update_task | done | Backfill task due date confirmed 2026-04-17 |
+| INS-007 | update_task | skipped | No --assign flag on tasks update; user ID required, not email |
+| INS-008 | update_task | skipped | No --assign flag on tasks update; user ID required, not email |
+| INS-009 | update_task | skipped | No --assign flag on tasks update; user ID required, not email |
+| INS-010 | flag_risk | done | Risk appended to risk-register.md: Phase 2 has no Planner tasks |
+| INS-011 | update_milestone | done | Phase 1 status confirmed on-track (no change needed) |
+| INS-012 | add_note | done | decision-log.md updated — bucket structure resolution recorded |
+| INS-013 | add_note | done | risk-register.md updated — R7 (unknown 7th task) closed |
+
+### Notes
+
+Executors ran successfully for all document and Planner task operations. Assignment instructions (INS-007, INS-008, INS-009) skipped — CLI tasks update has no --assign flag, and the user ID for pouyan.salehi@stock-solution.de is not in config.yaml. Two recurring CLI gaps identified this run: no --description flag (Run 3) and no --assign flag (Run 4). Both should be added. Post-execution snapshot written: 10 tasks captured (9 prior + 1 new Phase 2 planning task).

@@ -1,15 +1,15 @@
 {
-  "taken_at": "2026-04-16T10:54:17Z",
+  "taken_at": "2026-04-16T10:39:25Z",
   "plan_id": "WWclzqKzu0y9Abfr3qx4yZcAFNzi",
   "tasks": [
     {
-      "task_id": "7z8VGIRg5UeZrcCsT2ZJ15cAPoLy",
-      "title": "Phase 2 planning: define architecture and create task breakdown",
-      "bucket_id": "F0qYvhHzQUW728AUSppvJZcACk_M",
-      "bucket_name": "Phase 2: Teams Bot",
+      "task_id": "y8SnIUjvEU-WNfQtdRdhS5cAG8Gi",
+      "title": "[Q] Has the Executor agent Bash/Write/Edit permission issue been resolved? If not, what is the plan?",
+      "bucket_id": "yWh9JA8ZvE6lhPdRwEYEHJcAI5WJ",
+      "bucket_name": "Q&A",
       "status": "not_started",
       "start_date": null,
-      "due_date": "2026-05-01",
+      "due_date": null,
       "assigned_to": []
     },
     {
@@ -87,19 +87,9 @@
       "title": "Research: Azure Bot Service and Teams bot registration requirements",
       "bucket_id": "F0qYvhHzQUW728AUSppvJZcACk_M",
       "bucket_name": "Phase 2: Teams Bot",
-      "status": "completed",
+      "status": "not_started",
       "start_date": null,
       "due_date": "2026-04-30",
-      "assigned_to": []
-    },
-    {
-      "task_id": "y8SnIUjvEU-WNfQtdRdhS5cAG8Gi",
-      "title": "[Q] Has the Executor agent Bash/Write/Edit permission issue been resolved? If not, what is the plan?",
-      "bucket_id": "yWh9JA8ZvE6lhPdRwEYEHJcAI5WJ",
-      "bucket_name": "Q&A",
-      "status": "completed",
-      "start_date": null,
-      "due_date": null,
       "assigned_to": []
     }
   ]

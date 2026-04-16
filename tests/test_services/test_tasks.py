@@ -107,6 +107,19 @@ async def test_update_task(service, mock_client):
 
 
 @pytest.mark.asyncio
+async def test_update_task_with_assignments(service, mock_client):
+    mock_client.get.return_value = {"id": "t1", "planId": "p1", "title": "Task 1"}
+    mock_client.patch.return_value = None
+    assignments = {
+        "user-1": {"@odata.type": "#microsoft.graph.plannerAssignment", "orderHint": " !"}
+    }
+    await service.update("t1", assignments=assignments)
+    mock_client.patch.assert_called_once_with(
+        "/planner/tasks/t1", {"assignments": assignments}
+    )
+
+
+@pytest.mark.asyncio
 async def test_update_details(service, mock_client):
     mock_client.patch.return_value = None
     await service.update_details("t1", description="Updated desc")

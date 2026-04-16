@@ -107,6 +107,8 @@ def update_task(
     bucket_id: Annotated[str | None, typer.Option("--bucket-id", help="Move task to a different bucket")] = None,
     due_date: Annotated[str | None, typer.Option("--due-date", help="Due date (YYYY-MM-DD)")] = None,
     start_date: Annotated[str | None, typer.Option("--start-date", help="Start date (YYYY-MM-DD)")] = None,
+    description: Annotated[str | None, typer.Option("--description", help="Task description / notes")] = None,
+    assign: Annotated[list[str] | None, typer.Option("--assign", help="User IDs to add as assignees")] = None,
 ):
     """Update a task."""
     service = _get_task_service()
@@ -123,10 +125,18 @@ def update_task(
         kwargs["due_date_time"] = f"{due_date}T00:00:00Z"
     if start_date is not None:
         kwargs["start_date_time"] = f"{start_date}T00:00:00Z"
-    if not kwargs:
+    if assign is not None:
+        kwargs["assignments"] = {
+            uid: {"@odata.type": "#microsoft.graph.plannerAssignment", "orderHint": " !"}
+            for uid in assign
+        }
+    if not kwargs and description is None:
         console.print("[yellow]No updates specified[/yellow]")
         return
-    _run(service.update(task_id, **kwargs))
+    if kwargs:
+        _run(service.update(task_id, **kwargs))
+    if description is not None:
+        _run(service.update_details(task_id, description=description))
     console.print(f"[green]Updated task:[/green] {task_id}")
 
 
