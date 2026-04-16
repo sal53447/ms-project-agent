@@ -121,8 +121,10 @@ async def test_update_task_with_assignments(service, mock_client):
 
 @pytest.mark.asyncio
 async def test_update_details(service, mock_client):
+    mock_client.get.return_value = {"id": "t1", "description": "", "checklist": {}, "references": {}}
     mock_client.patch.return_value = None
     await service.update_details("t1", description="Updated desc")
+    mock_client.get.assert_called_once_with("/planner/tasks/t1/details")
     mock_client.patch.assert_called_once_with(
         "/planner/tasks/t1/details", {"description": "Updated desc"}
     )

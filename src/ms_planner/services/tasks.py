@@ -60,6 +60,8 @@ class TaskService:
         await self._client.patch(f"/planner/tasks/{task_id}", body)
 
     async def update_details(self, task_id: str, **kwargs: Any) -> None:
+        # Fetch details first to populate ETag cache (required for PATCH)
+        await self._client.get(f"/planner/tasks/{task_id}/details")
         await self._client.patch(f"/planner/tasks/{task_id}/details", dict(kwargs))
 
     async def delete(self, task_id: str) -> None:

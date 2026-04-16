@@ -44,6 +44,30 @@ def test_tasks_create(mock_get_svc):
 
 
 @patch("ms_planner.cli.tasks._get_task_service")
+def test_tasks_create_with_description(mock_get_svc):
+    mock_svc = AsyncMock()
+    mock_svc.create.return_value = Task(id="t-new", title="New Task", plan_id="p1")
+    mock_get_svc.return_value = mock_svc
+
+    result = runner.invoke(
+        app,
+        ["tasks", "create", "--plan-id", "p1", "--title", "New Task", "--description", "Hello world"],
+    )
+    assert result.exit_code == 0
+    mock_svc.update_details.assert_called_once_with("t-new", description="Hello world")
+
+
+@patch("ms_planner.cli.tasks._get_task_service")
+def test_tasks_create_without_description_skips_update_details(mock_get_svc):
+    mock_svc = AsyncMock()
+    mock_svc.create.return_value = Task(id="t-new", title="New Task", plan_id="p1")
+    mock_get_svc.return_value = mock_svc
+
+    runner.invoke(app, ["tasks", "create", "--plan-id", "p1", "--title", "New Task"])
+    mock_svc.update_details.assert_not_called()
+
+
+@patch("ms_planner.cli.tasks._get_task_service")
 def test_tasks_details(mock_get_svc):
     mock_svc = AsyncMock()
     mock_svc.get_details.return_value = TaskDetails(
@@ -153,3 +177,41 @@ def test_tasks_update_description_and_progress(mock_get_svc):
     assert result.exit_code == 0
     mock_svc.update_details.assert_called_once_with("t1", description="Done")
     mock_svc.update.assert_called_once_with("t1", percent_complete=100)
+
+
+@patch("ms_planner.cli.tasks._get_user_service")
+@patch("ms_planner.cli.tasks._get_task_service")
+def test_tasks_update_unassign(mock_get_task_svc, mock_get_user_svc):
+    """Unassign sets the user ID value to None in the assignments dict."""
+    mock_task_svc = AsyncMock()
+    mock_user_svc = AsyncMock()
+    mock_user_svc.resolve_to_id.return_value = "uid-1"
+    mock_get_task_svc.return_value = mock_task_svc
+    mock_get_user_svc.return_value = mock_user_svc
+
+    result = runner.invoke(app, ["tasks", "update", "t1", "--unassign", "uid-1"])
+    assert result.exit_code == 0
+    mock_task_svc.update.assert_called_once_with("t1", assignments={"uid-1": None})
+
+
+@patch("ms_planner.cli.tasks._get_user_service")
+@patch("ms_planner.cli.tasks._get_task_service")
+def test_tasks_update_assign_and_unassign(mock_get_task_svc, mock_get_user_svc):
+    """Assign and unassign can be combined — both keys present in one PATCH."""
+    mock_task_svc = AsyncMock()
+    mock_user_svc = AsyncMock()
+    mock_user_svc.resolve_to_id.side_effect = ["uid-add", "uid-remove"]
+    mock_get_task_svc.return_value = mock_task_svc
+    mock_get_user_svc.return_value = mock_user_svc
+
+    result = runner.invoke(
+        app,
+        ["tasks", "update", "t1", "--assign", "uid-add", "--unassign", "uid-remove"],
+    )
+    assert result.exit_code == 0
+    call_kwargs = mock_task_svc.update.call_args[1]
+    assert call_kwargs["assignments"]["uid-add"] == {
+        "@odata.type": "#microsoft.graph.plannerAssignment",
+        "orderHint": " !",
+    }
+    assert call_kwargs["assignments"]["uid-remove"] is None

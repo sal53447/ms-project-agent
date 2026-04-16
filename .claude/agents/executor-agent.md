@@ -77,9 +77,24 @@ You do **not** use `delete`, `groups`, `plans`, or any other commands.
 
 ---
 
-## Output
+## Output and Status Update
 
-After completing your instruction, output a YAML result block:
+After completing your instruction:
+
+**Step 1 — Update `instructions.md`**
+
+Edit `projects/<slug>/instructions.md` to mark the instruction as done or failed. Find the instruction block by its `id` and change:
+```yaml
+    status: pending
+```
+to:
+```yaml
+    status: done    # or: failed
+```
+
+This prevents re-execution if the Orchestrator runs again before the PM Agent produces new instructions.
+
+**Step 2 — Output a YAML result block**
 
 ```yaml
 - instruction_id: "<INS-NNN>"
@@ -87,7 +102,7 @@ After completing your instruction, output a YAML result block:
   detail: "<what happened — e.g. 'Task created: task-id-xyz'>"
 ```
 
-If a CLI command fails, set `status: failed` and record the error message in `detail`. Do not retry or attempt workarounds — report and stop.
+If a CLI command fails, set `status: failed` in both the result block and in `instructions.md`. Do not retry or attempt workarounds — report and stop.
 
 ---
 

@@ -92,11 +92,14 @@ def create_task(
     title: Annotated[str, typer.Option("--title", help="Task title")],
     bucket_id: Annotated[str | None, typer.Option("--bucket-id", help="Bucket ID")] = None,
     assign: Annotated[list[str] | None, typer.Option("--assign", help="User IDs to assign")] = None,
+    description: Annotated[str | None, typer.Option("--description", help="Task description")] = None,
     json: Annotated[bool, typer.Option("--json", help="Output as JSON")] = False,
 ):
     """Create a new task."""
     service = _get_task_service()
     task = _run(service.create(plan_id=plan_id, title=title, bucket_id=bucket_id, assignments=assign))
+    if description is not None:
+        _run(service.update_details(task.id, description=description))
 
     if json:
         console.print(json_lib.dumps(task.model_dump(), indent=2, default=str))
@@ -115,7 +118,8 @@ def update_task(
     due_date: Annotated[str | None, typer.Option("--due-date", help="Due date (YYYY-MM-DD)")] = None,
     start_date: Annotated[str | None, typer.Option("--start-date", help="Start date (YYYY-MM-DD)")] = None,
     description: Annotated[str | None, typer.Option("--description", help="Task description / notes")] = None,
-    assign: Annotated[list[str] | None, typer.Option("--assign", help="User IDs to add as assignees")] = None,
+    assign: Annotated[list[str] | None, typer.Option("--assign", help="User IDs/emails to add as assignees")] = None,
+    unassign: Annotated[list[str] | None, typer.Option("--unassign", help="User IDs/emails to remove as assignees")] = None,
 ):
     """Update a task."""
     service = _get_task_service()
@@ -132,13 +136,16 @@ def update_task(
         kwargs["due_date_time"] = f"{due_date}T00:00:00Z"
     if start_date is not None:
         kwargs["start_date_time"] = f"{start_date}T00:00:00Z"
-    if assign is not None:
+    if assign is not None or unassign is not None:
         user_svc = _get_user_service()
-        resolved_ids = [_run(user_svc.resolve_to_id(a)) for a in assign]
-        kwargs["assignments"] = {
-            uid: {"@odata.type": "#microsoft.graph.plannerAssignment", "orderHint": " !"}
-            for uid in resolved_ids
-        }
+        assignments = {}
+        for a in (assign or []):
+            uid = _run(user_svc.resolve_to_id(a))
+            assignments[uid] = {"@odata.type": "#microsoft.graph.plannerAssignment", "orderHint": " !"}
+        for a in (unassign or []):
+            uid = _run(user_svc.resolve_to_id(a))
+            assignments[uid] = None
+        kwargs["assignments"] = assignments
     if not kwargs and description is None:
         console.print("[yellow]No updates specified[/yellow]")
         return

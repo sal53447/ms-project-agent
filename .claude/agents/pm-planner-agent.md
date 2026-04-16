@@ -215,6 +215,7 @@ Health: <green | amber | red>
 instructions:
   - id: "INS-001"
     type: create_task
+    status: pending
     priority: high
     bucket: "<bucket name from config.yaml mapping>"
     title: "<concise task title>"
@@ -225,6 +226,7 @@ instructions:
 
   - id: "INS-002"
     type: update_task
+    status: pending
     priority: high
     task_id: "<planner task id>"
     field: due_date
@@ -233,6 +235,7 @@ instructions:
 
   - id: "INS-003"
     type: flag_risk
+    status: pending
     priority: high
     risk: "<risk description>"
     impact: high | medium | low
@@ -241,6 +244,7 @@ instructions:
 
   - id: "INS-004"
     type: update_milestone
+    status: pending
     priority: medium
     milestone: "<milestone name from milestones.md>"
     field: status
@@ -267,6 +271,7 @@ instructions:
 ```yaml
   - id: "INS-NNN"
     type: ask_human
+    status: pending
     priority: high
     question: "<clear, specific question>"
     context: "<why you need this — what decision is blocked without the answer>"
@@ -314,6 +319,7 @@ Order instructions within the YAML block by priority (high first), then by logic
 
 Before finalising `instructions.md`, verify:
 - [ ] Every instruction has a unique ID (INS-001, INS-002, ...)
+- [ ] Every instruction has `status: pending`
 - [ ] Every instruction has a non-empty `reason` field
 - [ ] `update_task` instructions reference real task IDs from Planner output
 - [ ] `create_task` instructions use bucket names defined in config.yaml

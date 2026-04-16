@@ -72,6 +72,13 @@ uv run planner tasks list --plan-id <plan_id>
 
 Filter results to only tasks whose bucket ID matches `bucket_ids.qa`.
 
+For each **`in_progress`** Q&A task, fetch its full details to capture the human's answer:
+```bash
+uv run planner tasks details <task_id> --json
+```
+
+Extract the `description` field and attach it to the task object. This is how humans communicate answers back to the PM Agent — always fetch and pass it.
+
 ### Step 5 — Classify Q&A items
 
 Separate Q&A tasks by status:
@@ -79,14 +86,14 @@ Separate Q&A tasks by status:
 | Task status | Classification | What you do |
 |---|---|---|
 | `not_started` | Documentation / pending | Pass to PM Agent as **context only** — not an active request |
-| `in_progress` | **Active request** | Pass to PM Agent as a **request to fulfil** |
+| `in_progress` | **Active request** | Pass to PM Agent as a **request to fulfil** (with `description` attached) |
 | `completed` | Already handled | Skip entirely |
 
 **Critical rule:** You never promote a task to `in_progress` — only a human does that. A task at `not_started` is waiting for the human to decide; you treat it as background context.
 
 Build two lists:
 - `qa_context`: all `not_started` items (background knowledge)
-- `qa_requests`: all `in_progress` items (things to act on)
+- `qa_requests`: all `in_progress` items (things to act on), each with a `description` field containing the human's answer
 
 ### Step 6 — Run the PM Agent
 
@@ -113,7 +120,9 @@ Wait for the PM Agent to complete before proceeding.
 
 Read `projects/<slug>/instructions.md` and parse the YAML `instructions` block.
 
-Split instructions into two groups:
+**Skip any instruction where `status: done`** — these were already executed in a previous run. Log each skipped instruction as "already done" in the execution log.
+
+Split remaining instructions into two groups:
 - **`ask_human`** instructions → handle in Step 8
 - **Action instructions** (`create_task`, `update_task`, `create_bucket`, `flag_risk`, `update_milestone`, `add_checklist_item`, `add_note`) → handle in Step 9
 
